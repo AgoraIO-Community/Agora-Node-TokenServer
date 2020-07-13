@@ -1,0 +1,16 @@
+{
+  "name": "agoratokenserver",
+  "version": "1.0.0",
+  "description": "Agora token server in Node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "digitallysavvy",
+  "license": "MIT",
+  "dependencies": {
+    "agora-access-token": "^2.0.4",
+    "express": "^4.17.1"
+  }
+}
