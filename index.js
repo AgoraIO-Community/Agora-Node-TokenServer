@@ -1,5 +1,5 @@
 const express = require('express');
-const {RtcTokenBuilder, RtcRole} = require('agora-access-token')
+const {RtcTokenBuilder, RtcRole} = require('agora-access-token');
 
 const PORT = 8080;
 
@@ -16,39 +16,41 @@ const nocache = (req, resp, next) => {
 }
 
 const generateAccessToken = (req, resp) => {
-  resp.header('Access-Control-Allow-Origin', '*');
-
-  const channelName = req.query.channel;
+  // set response header
+  resp.header('Acess-Control-Allow-Origin', '*');
+  // get channel name
+  const channelName = req.query.channelName;
   if (!channelName) {
-    return  resp.status(500).json({ 'error': 'cahnnel name is required'});
+    return resp.status(500).json({ 'error': 'channel is required' });
   }
-
+  // get uid 
   let uid = req.query.uid;
-  if(!uid) {
+  if(!uid || uid == '') {
     uid = 0;
   }
-
-  let role; // 1 for publisher and 2 for subscriber.
-  if (req.query.role == "publisher") {
+  // get role
+  let role = RtcRole.SUBSCRIBER;
+  if (req.query.role == 'publisher') {
     role = RtcRole.PUBLISHER;
+  }
+  // get the expire time
+  let expireTime = req.query.expireTime;
+  if (!expireTime || expireTime == '') {
+    expireTime = 3600;
   } else {
-    role = RtcRole.SUBSCRIBER;
+    expireTime = parseInt(expireTime, 10);
   }
-
-  let exporedTs = req.query.expiredTs;
-  if(!exporedTs) {
-    exporedTs = 3600; // defaults to 1hr
-  }
-
-  const currentTimestamp = Math.floor(Date.now() / 1000)
-  const privilegeExpiredTs = currentTimestamp + exporedTs
-
-  const token = RtcTokenBuilder.buildTokenWithUid(APP_ID, APP_CERTIFICATE, channelName, uid, role, privilegeExpiredTs);
-  return resp.json({'token' : token });
-};
+  // calculate privilege expire time
+  const currentTime = Math.floor(Date.now() / 1000);
+  const privilegeExpireTime = currentTime + expireTime;
+  // build the token
+  const token = RtcTokenBuilder.buildTokenWithUid(APP_ID, APP_CERTIFICATE, channelName, uid, role, privilegeExpireTime);
+  // return the token
+  return resp.json({ 'token': token });
+}
 
 app.get('/access_token', nocache, generateAccessToken);
 
-app.listen(PORT, function(){
-  console.log('Listening on port: ' + PORT);
+app.listen(PORT, () => {
+  console.log(`Listening on port: ${PORT}`);
 });
