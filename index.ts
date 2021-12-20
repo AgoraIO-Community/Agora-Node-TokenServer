@@ -8,7 +8,6 @@ const PORT = process.env.PORT || 8080;
 const APP_ID = process.env.APP_ID;
 const APP_CERTIFICATE = process.env.APP_CERTIFICATE;
 
-
 const nocache = (req: express.Request, resp: express.Response, next: express.NextFunction) => {
   resp.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
   resp.header('Expires', '-1');
@@ -148,7 +147,6 @@ app.get('/ping', nocache, ping)
 app.get('/rtc/:channel/:role/:tokentype/:uid', nocache , generateRTCToken);
 app.get('/rtm/:uid/', nocache , generateRTMToken);
 app.get('/rte/:channel/:role/:tokentype/:uid', nocache , generateRTEToken);
-
 
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
