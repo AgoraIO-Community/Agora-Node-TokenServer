@@ -1,26 +1,26 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const {RtcTokenBuilder, RtcRole, RtmTokenBuilder, RtmRole} = require('agora-access-token');
+import express from "express";
+import dotenv from "dotenv";
+import { RtcTokenBuilder, RtcRole, RtmTokenBuilder, RtmRole } from "agora-access-token";
 
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT | 8080;
+const PORT = process.env.PORT || 8080;
 const APP_ID = process.env.APP_ID;
 const APP_CERTIFICATE = process.env.APP_CERTIFICATE;
 
 
-const nocache = (_, resp, next) => {
+const nocache = (req: express.Request, resp: express.Response, next: express.NextFunction) => {
   resp.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
   resp.header('Expires', '-1');
   resp.header('Pragma', 'no-cache');
   next();
 }
 
-const ping = (req, resp) => {
+const ping = (req: express.Request, resp: express.Response) => {
   resp.send({message: 'pong'});
 }
 
-const generateRTCToken = (req, resp) => {
+const generateRTCToken = (req: express.Request, resp: express.Response) => {
   // set response header
   resp.header('Acess-Control-Allow-Origin', '*');
   // get channel name
@@ -43,11 +43,15 @@ const generateRTCToken = (req, resp) => {
     return resp.status(500).json({ 'error': 'role is incorrect' });
   }
   // get the expire time
-  let expireTime = req.query.expiry;
+  let expireTime
   if (!expireTime || expireTime === '') {
     expireTime = 3600;
   } else {
-    expireTime = parseInt(expireTime, 10);
+    try {
+      expireTime = parseInt(req.query.expiry as string, 10);
+    } catch (e) {
+      return resp.status(500).json({ 'error': 'expiry is incorrect ' + JSON.stringify(e) });
+    }
   }
   // calculate privilege expire time
   const currentTime = Math.floor(Date.now() / 1000);
@@ -57,7 +61,7 @@ const generateRTCToken = (req, resp) => {
   if (req.params.tokentype === 'userAccount') {
     token = RtcTokenBuilder.buildTokenWithAccount(APP_ID, APP_CERTIFICATE, channelName, uid, role, privilegeExpireTime);
   } else if (req.params.tokentype === 'uid') {
-    token = RtcTokenBuilder.buildTokenWithUid(APP_ID, APP_CERTIFICATE, channelName, uid, role, privilegeExpireTime);
+    token = RtcTokenBuilder.buildTokenWithUid(APP_ID, APP_CERTIFICATE, channelName, parseInt(uid, 10), role, privilegeExpireTime);
   } else {
     return resp.status(500).json({ 'error': 'token type is invalid' });
   }
@@ -65,7 +69,7 @@ const generateRTCToken = (req, resp) => {
   return resp.json({ 'rtcToken': token });
 }
 
-const generateRTMToken = (req, resp) => {
+const generateRTMToken = (req: express.Request, resp: express.Response) => {
   // set response header
   resp.header('Acess-Control-Allow-Origin', '*');
 
@@ -76,12 +80,16 @@ const generateRTMToken = (req, resp) => {
   }
   // get role
   let role = RtmRole.Rtm_User;
-   // get the expire time
-  let expireTime = req.query.expiry;
+  // get the expire time
+  let expireTime
   if (!expireTime || expireTime === '') {
     expireTime = 3600;
   } else {
-    expireTime = parseInt(expireTime, 10);
+    try {
+      expireTime = parseInt(req.query.expiry as string, 10);
+    } catch (e) {
+      return resp.status(500).json({ 'error': 'expiry is incorrect ' + JSON.stringify(e) });
+    }
   }
   // calculate privilege expire time
   const currentTime = Math.floor(Date.now() / 1000);
@@ -93,7 +101,7 @@ const generateRTMToken = (req, resp) => {
   return resp.json({ 'rtmToken': token });
 }
 
-const generateRTEToken = (req, resp) => {
+const generateRTEToken = (req: express.Request, resp: express.Response) => {
   // set response header
   resp.header('Acess-Control-Allow-Origin', '*');
   // get channel name
@@ -116,17 +124,21 @@ const generateRTEToken = (req, resp) => {
     return resp.status(500).json({ 'error': 'role is incorrect' });
   }
   // get the expire time
-  let expireTime = req.query.expiry;
+  let expireTime
   if (!expireTime || expireTime === '') {
     expireTime = 3600;
   } else {
-    expireTime = parseInt(expireTime, 10);
+    try {
+      expireTime = parseInt(req.query.expiry as string, 10);
+    } catch (e) {
+      return resp.status(500).json({ 'error': 'expiry is incorrect ' + JSON.stringify(e) });
+    }
   }
   // calculate privilege expire time
   const currentTime = Math.floor(Date.now() / 1000);
   const privilegeExpireTime = currentTime + expireTime;
   // build the token
-  const rtcToken = RtcTokenBuilder.buildTokenWithUid(APP_ID, APP_CERTIFICATE, channelName, uid, role, privilegeExpireTime);
+  const rtcToken = RtcTokenBuilder.buildTokenWithUid(APP_ID, APP_CERTIFICATE, channelName, parseInt(uid, 10), role, privilegeExpireTime);
   const rtmToken = RtmTokenBuilder.buildToken(APP_ID, APP_CERTIFICATE, uid, role, privilegeExpireTime);
   // return the token
   return resp.json({ 'rtcToken': rtcToken, 'rtmToken': rtmToken });
