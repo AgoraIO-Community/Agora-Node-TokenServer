@@ -11,16 +11,58 @@ Start the service
 npm start
 ```
 
-### Generate the Token ###
-The endpoint generates a token uisng: `channelName` _(String)_ , the `uid` _(Int)_, and a `role` _('subscriber' or 'publisher')_. 
-`(optional)` Pass `expirationTime` _(integer)_ to represent the token lifetime in seconds.
+## Endpoints ##
+
+### Ping ###
+**endpoint structure**
+```
+/ping
+```
+response:
+``` 
+{"message":"pong"} 
+```
+
+### RTC Token ###
+The `rtc` token endpoint requires a `tokentype` (uid || userAccount), `channelName`, and the user's `uid` (type varies based on `tokentype`). 
+`(optional)` Pass an integer to represent the token lifetime in seconds.
 
 **endpoint structure** 
 ```
-?channelName=&uid=&role=&expireTime=
+/rtc/:channelName/:role/:tokentype/:uid/?expiry=
 ```
 
 response:
 ``` 
-{"token":" "} 
+{"rtcToken":" "} 
+```
+
+## RTM Token ##
+The `rtm` token endpoint requires the user's `uid`. 
+`(optional)` Pass an integer to represent the privelege lifetime in seconds.
+**endpoint structure** 
+```
+/rtm/:uid/?expiry=
+```
+
+response:
+``` 
+{"rtmToken":" "} 
+```
+
+### Both Tokens ###
+The `rte` token endpoint generates both the `rtc` and `rtm` tokens with a single request. This endpoint requires a `tokentype` (uid || userAccount), `channelName`, and the user's `uid` (type varies `String/Int` based on `tokentype`). 
+`(optional)` Pass an integer to represent the token lifetime in seconds.
+
+**endpoint structure** 
+```
+/rte/:channelName/:role/:tokentype/:uid/?expiry=
+```
+
+response:
+``` 
+{
+  "rtcToken":" ",
+  "rtmToken":" " 
+} 
 ```
