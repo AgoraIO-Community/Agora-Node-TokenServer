@@ -1,0 +1,18 @@
+{
+    "name": "Agora NodeJS Token Server",
+    "description": "An example of a simple Node/Express server that generates tokens for Agora applications",
+    "logo": "https://www.agora.io/en/wp-content/themes/agora-2020/images/agora-logo.svg",
+    "website": "https://www.agora.io",
+    "repository": "https://github.com/AgoraIO-Community/Agora-Node-TokenServer",
+    "keywords": ["node", "express", "agora",  "token", "server"],
+    "env": {
+        "APP_ID": {
+          "description": "Agora.io App ID: Login to the Agora.io Developer Dashboard (http://dashboard.agora.io), and navigate to the \"Projects\" tab to get this value",
+          "required": true
+        },
+        "APP_CERTIFICATE": {
+          "description": "Agora.io App Certificate: Login to the Agora.io Developer Dashboard (http://dashboard.agora.io), and navigate to the \"Projects\" tab to get this value",
+          "required": true
+        }
+      }
+  }
