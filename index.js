@@ -21,7 +21,7 @@ const ping = (req, resp) => {
 
 const generateRTCToken = (req, resp) => {
   // set response header
-  resp.header('Acess-Control-Allow-Origin', '*');
+  resp.header('Access-Control-Allow-Origin', '*');
   // get channel name
   const channelName = req.params.channel;
   if (!channelName) {
@@ -66,7 +66,7 @@ const generateRTCToken = (req, resp) => {
 
 const generateRTMToken = (req, resp) => {
   // set response header
-  resp.header('Acess-Control-Allow-Origin', '*');
+  resp.header('Access-Control-Allow-Origin', '*');
 
   // get uid 
   let uid = req.params.uid;
@@ -94,7 +94,7 @@ const generateRTMToken = (req, resp) => {
 
 const generateRTEToken = (req, resp) => {
   // set response header
-  resp.header('Acess-Control-Allow-Origin', '*');
+  resp.header('Access-Control-Allow-Origin', '*');
   // get channel name
   const channelName = req.params.channel;
   if (!channelName) {
