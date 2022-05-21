@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const dotenv = require('dotenv');
 const {RtcTokenBuilder, RtcRole, RtmTokenBuilder, RtmRole} = require('agora-access-token');
 
@@ -27,7 +28,7 @@ const generateRTCToken = (req, resp) => {
   if (!channelName) {
     return resp.status(500).json({ 'error': 'channel is required' });
   }
-  // get uid 
+  // get uid
   let uid = req.params.uid;
   if(!uid || uid === '') {
     return resp.status(500).json({ 'error': 'uid is required' });
@@ -68,7 +69,7 @@ const generateRTMToken = (req, resp) => {
   // set response header
   resp.header('Access-Control-Allow-Origin', '*');
 
-  // get uid 
+  // get uid
   let uid = req.params.uid;
   if(!uid || uid === '') {
     return resp.status(500).json({ 'error': 'uid is required' });
@@ -100,7 +101,7 @@ const generateRTEToken = (req, resp) => {
   if (!channelName) {
     return resp.status(500).json({ 'error': 'channel is required' });
   }
-  // get uid 
+  // get uid
   let uid = req.params.uid;
   if(!uid || uid === '') {
     return resp.status(500).json({ 'error': 'uid is required' });
@@ -131,6 +132,7 @@ const generateRTEToken = (req, resp) => {
   return resp.json({ 'rtcToken': rtcToken, 'rtmToken': rtmToken });
 }
 
+app.options('*', cors());
 app.get('/ping', nocache, ping)
 app.get('/rtc/:channel/:role/:tokentype/:uid', nocache , generateRTCToken);
 app.get('/rtm/:uid/', nocache , generateRTMToken);
