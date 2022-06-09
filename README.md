@@ -4,11 +4,19 @@ This is an example of a simple Node/Express server that generates tokens for Ago
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ### Run the server ###
-Install the dependencies
+- Install the dependencies
 ```node
 npm install
 ```
-Start the service
+- Create a copy of the `.env.example` file and save it as `.env`
+- Add your Agora App ID and App Certificate:
+```
+APP_ID=ca123xxxxxx
+APP_CERTIFICATE=12za123xxxxxx
+```
+You can obtain these values by selecting your project in the [Agora console projects section](https://console.agora.io/projects). Optionally, you can also define a port.
+
+- Start the service
 ```node
 npm start
 ```
