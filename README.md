@@ -1,7 +1,9 @@
 # Agora Node Token Server
 This is an example of a simple Node/Express server that generates tokens for Agora applications. 
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/huuDOY?referralCode=HTPdHX)
+
+[![Deploy on Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ### Run the server ###
 - Install the dependencies
@@ -34,7 +36,7 @@ response:
 ```
 
 ### RTC Token ###
-The `rtc` token endpoint requires a `tokentype` (uid || userAccount), `channelName`, and the user's `uid` (type varies based on `tokentype`). 
+The `rtc` token endpoint requires a `channelName`, `role` ('publisher' or 'audience'), `tokentype` ('uid' || 'userAccount') and the user's `uid` (type varies based on `tokentype` (example: `1000` for uid, `ekaansh` for userAccount). 
 `(optional)` Pass an integer to represent the token lifetime in seconds.
 
 **endpoint structure** 
@@ -61,7 +63,7 @@ response:
 ```
 
 ### Both Tokens ###
-The `rte` token endpoint generates both the `rtc` and `rtm` tokens with a single request. This endpoint requires a `tokentype` (uid || userAccount), `channelName`, and the user's `uid` (type varies `String/Int` based on `tokentype`). 
+The `rte` token endpoint generates both the `rtc` and `rtm` tokens with a single request.
 `(optional)` Pass an integer to represent the token lifetime in seconds.
 
 **endpoint structure** 
