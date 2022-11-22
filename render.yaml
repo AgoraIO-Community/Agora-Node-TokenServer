@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: Agora Token Server
+    env: node
+    repo: https://github.com/AgoraIO-Community/Agora-Node-TokenServer.git
+    rootDir: .
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: APP_ID
+        sync: false
+      - key: APP_CERTIFICATE
+        sync: false
