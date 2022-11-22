@@ -26,12 +26,12 @@ const generateRTCToken = (req, resp) => {
   // get channel name
   const channelName = req.params.channel;
   if (!channelName) {
-    return resp.status(500).json({ 'error': 'channel is required' });
+    return resp.status(400).json({ 'error': 'channel is required' });
   }
   // get uid
   let uid = req.params.uid;
   if(!uid || uid === '') {
-    return resp.status(500).json({ 'error': 'uid is required' });
+    return resp.status(400).json({ 'error': 'uid is required' });
   }
   // get role
   let role;
@@ -40,7 +40,7 @@ const generateRTCToken = (req, resp) => {
   } else if (req.params.role === 'audience') {
     role = RtcRole.SUBSCRIBER
   } else {
-    return resp.status(500).json({ 'error': 'role is incorrect' });
+    return resp.status(400).json({ 'error': 'role is incorrect' });
   }
   // get the expire time
   let expireTime = req.query.expiry;
@@ -59,7 +59,7 @@ const generateRTCToken = (req, resp) => {
   } else if (req.params.tokentype === 'uid') {
     token = RtcTokenBuilder.buildTokenWithUid(APP_ID, APP_CERTIFICATE, channelName, uid, role, privilegeExpireTime);
   } else {
-    return resp.status(500).json({ 'error': 'token type is invalid' });
+    return resp.status(400).json({ 'error': 'token type is invalid' });
   }
   // return the token
   return resp.json({ 'rtcToken': token });
@@ -72,7 +72,7 @@ const generateRTMToken = (req, resp) => {
   // get uid
   let uid = req.params.uid;
   if(!uid || uid === '') {
-    return resp.status(500).json({ 'error': 'uid is required' });
+    return resp.status(400).json({ 'error': 'uid is required' });
   }
   // get role
   let role = RtmRole.Rtm_User;
@@ -99,12 +99,12 @@ const generateRTEToken = (req, resp) => {
   // get channel name
   const channelName = req.params.channel;
   if (!channelName) {
-    return resp.status(500).json({ 'error': 'channel is required' });
+    return resp.status(400).json({ 'error': 'channel is required' });
   }
   // get uid
   let uid = req.params.uid;
   if(!uid || uid === '') {
-    return resp.status(500).json({ 'error': 'uid is required' });
+    return resp.status(400).json({ 'error': 'uid is required' });
   }
   // get role
   let role;
@@ -113,7 +113,7 @@ const generateRTEToken = (req, resp) => {
   } else if (req.params.role === 'audience') {
     role = RtcRole.SUBSCRIBER
   } else {
-    return resp.status(500).json({ 'error': 'role is incorrect' });
+    return resp.status(400).json({ 'error': 'role is incorrect' });
   }
   // get the expire time
   let expireTime = req.query.expiry;
