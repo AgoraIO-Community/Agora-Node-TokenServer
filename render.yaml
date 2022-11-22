@@ -4,6 +4,7 @@ services:
     env: node
     repo: https://github.com/AgoraIO-Community/Agora-Node-TokenServer.git
     rootDir: .
+    startCommand: npm start
     envVars:
       - key: APP_ID
         sync: false
