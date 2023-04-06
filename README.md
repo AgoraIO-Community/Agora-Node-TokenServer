@@ -1,14 +1,5 @@
 # Agora Node Token Server
-This is an example of a simple Node/Express server that generates tokens for Agora applications. 
-
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/huuDOY?referralCode=HTPdHX)
-
-<a target="_blank" href="https://render.com/deploy?repo=https://github.com/AgoraIO-Community/Agora-Node-TokenServer">
-  <img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render">
-</a>
-<br /> <br />
-
-[![Deploy on Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+Petzen's Node Token server for video call.
 
 ### Run the server ###
 - Install the dependencies
@@ -21,7 +12,6 @@ npm install
 APP_ID=ca123xxxxxx
 APP_CERTIFICATE=12za123xxxxxx
 ```
-You can obtain these values by selecting your project in the [Agora console projects section](https://console.agora.io/projects). Optionally, you can also define a port.
 
 - Start the service
 ```node
