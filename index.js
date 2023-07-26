@@ -1,13 +1,18 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const {RtcTokenBuilder, RtcRole, RtmTokenBuilder, RtmRole} = require('agora-access-token');
+const {RtcTokenBuilder, RtcRole, RtmTokenBuilder} = require('agora-token');
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 const APP_ID = process.env.APP_ID;
 const APP_CERTIFICATE = process.env.APP_CERTIFICATE;
+
+if(!APP_ID || !APP_CERTIFICATE) {
+  console.error('You must specify APP_ID and APP_CERTIFICATE in .env');
+  process.exit();
+}
 
 const nocache = (_, resp, next) => {
   resp.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
@@ -49,15 +54,13 @@ const generateRTCToken = (req, resp) => {
   } else {
     expireTime = parseInt(expireTime, 10);
   }
-  // calculate privilege expire time
-  const currentTime = Math.floor(Date.now() / 1000);
-  const privilegeExpireTime = currentTime + expireTime;
   // build the token
   let token;
   if (req.params.tokentype === 'userAccount') {
-    token = RtcTokenBuilder.buildTokenWithAccount(APP_ID, APP_CERTIFICATE, channelName, uid, role, privilegeExpireTime);
+    token = RtcTokenBuilder.buildTokenWithUserAccount(APP_ID, APP_CERTIFICATE, channelName, uid, role, expireTime, expireTime);
   } else if (req.params.tokentype === 'uid') {
-    token = RtcTokenBuilder.buildTokenWithUid(APP_ID, APP_CERTIFICATE, channelName, uid, role, privilegeExpireTime);
+    token = RtcTokenBuilder.buildTokenWithUid(APP_ID, APP_CERTIFICATE, channelName, uid, role, expireTime, expireTime);
+    console.log(expireTime,token);
   } else {
     return resp.status(400).json({ 'error': 'token type is invalid' });
   }
@@ -74,21 +77,15 @@ const generateRTMToken = (req, resp) => {
   if(!uid || uid === '') {
     return resp.status(400).json({ 'error': 'uid is required' });
   }
-  // get role
-  let role = RtmRole.Rtm_User;
-   // get the expire time
+  // get the expire time
   let expireTime = req.query.expiry;
   if (!expireTime || expireTime === '') {
     expireTime = 3600;
   } else {
     expireTime = parseInt(expireTime, 10);
   }
-  // calculate privilege expire time
-  const currentTime = Math.floor(Date.now() / 1000);
-  const privilegeExpireTime = currentTime + expireTime;
   // build the token
-  console.log(APP_ID, APP_CERTIFICATE, uid, role, privilegeExpireTime)
-  const token = RtmTokenBuilder.buildToken(APP_ID, APP_CERTIFICATE, uid, role, privilegeExpireTime);
+  const token = RtmTokenBuilder.buildToken(APP_ID, APP_CERTIFICATE, uid, expireTime);
   // return the token
   return resp.json({ 'rtmToken': token });
 }
@@ -122,12 +119,9 @@ const generateRTEToken = (req, resp) => {
   } else {
     expireTime = parseInt(expireTime, 10);
   }
-  // calculate privilege expire time
-  const currentTime = Math.floor(Date.now() / 1000);
-  const privilegeExpireTime = currentTime + expireTime;
   // build the token
-  const rtcToken = RtcTokenBuilder.buildTokenWithUid(APP_ID, APP_CERTIFICATE, channelName, uid, role, privilegeExpireTime);
-  const rtmToken = RtmTokenBuilder.buildToken(APP_ID, APP_CERTIFICATE, uid, role, privilegeExpireTime);
+  const rtcToken = RtcTokenBuilder.buildTokenWithUid(APP_ID, APP_CERTIFICATE, channelName, uid, role, expireTime, expireTime);
+  const rtmToken = RtmTokenBuilder.buildToken(APP_ID, APP_CERTIFICATE, uid, expireTime);
   // return the token
   return resp.json({ 'rtcToken': rtcToken, 'rtmToken': rtmToken });
 }
