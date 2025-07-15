@@ -6,8 +6,7 @@ const {
   RtcTokenBuilder,
   RtcRole,
   RtmTokenBuilder,
-  RtmRole,
-} = require('agora-access-token');
+} = require('agora-token');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -117,8 +116,6 @@ const generateRTMToken = (req, resp) => {
   if (!uid || uid === '') {
     return resp.status(400).json({ error: 'uid is required' });
   }
-  // get role
-  let role = RtmRole.Rtm_User;
   // get the expire time
   let expireTime = req.query.expiry;
   if (!expireTime || expireTime === '') {
@@ -130,12 +127,11 @@ const generateRTMToken = (req, resp) => {
   const currentTime = Math.floor(Date.now() / 1000);
   const privilegeExpireTime = currentTime + expireTime;
   // build the token
-  console.log(APP_ID, APP_CERTIFICATE, uid, role, privilegeExpireTime);
+  console.log(APP_ID, APP_CERTIFICATE, uid, privilegeExpireTime);
   const token = RtmTokenBuilder.buildToken(
     APP_ID,
     APP_CERTIFICATE,
     uid,
-    role,
     privilegeExpireTime
   );
   // return the token
@@ -195,7 +191,6 @@ const generateRTEToken = (req, resp) => {
     APP_ID,
     APP_CERTIFICATE,
     uid,
-    role,
     privilegeExpireTime
   );
   // return the token
