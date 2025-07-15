@@ -5,7 +5,7 @@ const {
   RtcRole,
   RtmTokenBuilder,
   RtmRole,
-} = require('agora-access-token');
+} = require('agora-token');
 
 // Mock environment variables
 process.env.APP_ID = 'test-app-id';
@@ -43,8 +43,8 @@ describe('Token Generation API', () => {
     it('should return error for missing channel', async () => {
       const response = await request(app).get('/rtc//publisher/uid/1234');
 
-      expect(response.status).toBe(400);
-      expect(response.body).toEqual({ error: 'channel is required' });
+      // '/rtc//publisher/uid/1234' does not match '/rtc/:channel/:role/:tokentype/:uid'
+      expect(response.status).toBe(404);
     });
 
     // Test error handling for invalid role parameter
@@ -75,8 +75,8 @@ describe('Token Generation API', () => {
     it('should return error for missing uid', async () => {
       const response = await request(app).get('/rtm/');
 
-      expect(response.status).toBe(400);
-      expect(response.body).toEqual({ error: 'uid is required' });
+      // '/rtm/' does not match '/rtm/:uid/'
+      expect(response.status).toBe(404);
     });
   });
 
@@ -99,8 +99,7 @@ describe('Token Generation API', () => {
     it('should return error for missing channel', async () => {
       const response = await request(app).get('/rte//publisher/uid/1234');
 
-      expect(response.status).toBe(400);
-      expect(response.body).toEqual({ error: 'channel is required' });
+      expect(response.status).toBe(404);
     });
 
     // Test error handling for invalid role parameter
